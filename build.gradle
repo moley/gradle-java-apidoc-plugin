@@ -29,6 +29,7 @@ apply {
 }
 
 group = 'gradle.plugin.com.github.moley'
+version = '0.1'
 
 dependencies {
   compile gradleApi()
