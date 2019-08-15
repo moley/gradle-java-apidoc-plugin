@@ -26,6 +26,12 @@ repositories {
 apply {
   plugin 'groovy'
   plugin 'com.jfrog.bintray'
+  plugin 'maven-publish'
+}
+
+//create source jar
+tasks.create('sourceJar', Jar) {
+  from sourceSets.main.allJava
 }
 
 group = 'gradle.plugin.com.github.moley'
@@ -37,9 +43,6 @@ dependencies {
   compile 'org.leguan:leguan-gradleutils:0.90'
 
   testCompile 'junit:junit:4.12'
-
-
-
 }
 
 
@@ -53,6 +56,19 @@ asciidoctor {
   options attributes: ['source-highlighter': 'prettify' , 'stylesheet': file("src/main/docs/themes/leguan.css")]
 
   dependsOn tasks.test
+}
+
+//publish the additional source jar
+publishing {
+  publications {
+    myPublication(MavenPublication) {
+      from components.java
+
+      artifact project.sourceJar {
+        classifier 'sources'
+      }
+    }
+  }
 }
 
 bintray {
