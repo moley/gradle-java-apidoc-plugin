@@ -27,6 +27,8 @@ apply {
   plugin 'groovy'
   plugin 'com.jfrog.bintray'
   plugin 'maven-publish'
+  plugin 'jacoco'
+
 }
 
 //create source jar
@@ -89,6 +91,15 @@ bintray {
     version.attributes = [ 'gradle-plugin': "gradle.plugin.com.github.moley.${project.name}:gradle.plugin.com.github.moley:${project.name}" ]
   }
 }
+
+jacocoTestReport {
+  reports {
+    xml.enabled true
+    html.enabled false
+  }
+}
+
+check.dependsOn jacocoTestReport
 
 
 
