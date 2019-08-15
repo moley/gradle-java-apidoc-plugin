@@ -1,0 +1,77 @@
+buildscript {
+  repositories {
+    mavenCentral()
+    mavenLocal()
+    jcenter()
+
+  }
+  dependencies {
+    classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
+  }
+}
+
+plugins {
+  id 'org.asciidoctor.convert' version '2.2.0'
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+    jcenter()
+    maven {
+      url  "https://dl.bintray.com/markusoley/leguan"
+    }
+}
+
+apply {
+  plugin 'groovy'
+  plugin 'com.jfrog.bintray'
+}
+
+group = 'gradle.plugin.com.github.moley'
+
+dependencies {
+  compile gradleApi()
+  compile 'org.leguan:leguan-language-java:0.90'
+  compile 'org.leguan:leguan-gradleutils:0.90'
+
+  testCompile 'junit:junit:4.12'
+
+
+
+}
+
+
+asciidoctor {
+  sourceDir = file 'build/apidocExample'
+  sources {
+    include '**/**.adoc'
+    //include '**/**.yml'
+  }
+
+  options attributes: ['source-highlighter': 'prettify' , 'stylesheet': file("src/main/docs/themes/leguan.css")]
+
+  dependsOn tasks.test
+}
+
+bintray {
+  user = System.properties['bintray.username']
+  key = System.properties['bintray.password']
+  publications = ['myPublication']
+  pkg {
+    repo = 'gradle-java-apidoc-plugin'
+    name = "${project.name}"
+    desc = 'generate api documentation in java doc manner'
+    websiteUrl = 'https://github.com/moley/gradle-java-apidoc-plugin'
+    issueTrackerUrl = 'https://github.com/moley/gradle-java-apidoc-plugin'
+    vcsUrl = 'https://github.com/moley/gradle-java-apidoc-plugin.git'
+    licenses = ['Apache-2.0']
+    labels = ['apidoc', 'gradle', 'documentation', 'plugin']
+    attributes= ['plat': ['win', 'linux', 'osx']]
+    publicDownloadNumbers = true
+    version.attributes = [ 'gradle-plugin': "gradle.plugin.com.github.moley.${project.name}:gradle.plugin.com.github.moley:${project.name}" ]
+  }
+}
+
+
+
